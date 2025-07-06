@@ -84,17 +84,33 @@ public static class MatrixUtility
     }
     
     /// <summary>
-    /// 旋转ZXY(Unity的顺序）
+    /// 固定轴ZXY旋转(Unity的顺序）
     /// </summary>
     /// <param name="z">弧度</param>
     /// <param name="x">弧度</param>
     /// <param name="y">弧度</param>
     /// <returns></returns>
+    /// 旋转
     public static Matrix4x4 RotationZXY(float z, float x, float y)
     {
         // 注意乘法顺序：先Z，后X，最后Y
         return RotationMatrix_Y(y) * RotationMatrix_X(x) * RotationMatrix_Z(z);
     }
+    
+    /// <summary>
+    /// 动态轴 ZXY 旋转
+    /// </summary>
+    /// <param name="z"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    /// 矩阵顺序要反过来，因为后面的旋转是基于前面旋转后的坐标系
+    /// 动态轴 ZXY 旋转的矩阵乘法顺序应该是：Z * X * Y
+    public static Matrix4x4 LocalRotationZXY(float z, float x, float y)
+    {
+        return RotationMatrix_Z(z) * RotationMatrix_X(x) * RotationMatrix_Y(y);
+    }
+    
     
     /// <summary>
     /// 平移矩阵
@@ -114,6 +130,23 @@ public static class MatrixUtility
         };
     }
     
+    /// <summary>
+    /// 缩放矩阵
+    /// </summary>
+    /// <param name="sx"></param>
+    /// <param name="sy"></param>
+    /// <param name="sz"></param>
+    /// <returns></returns>
+    public static Matrix4x4 ScaleMatrix(float sx, float sy, float sz)
+    {
+        return new Matrix4x4
+        {
+            m00 = sx, m01 = 0,  m02 = 0,  m03 = 0,
+            m10 = 0,  m11 = sy, m12 = 0,  m13 = 0,
+            m20 = 0,  m21 = 0,  m22 = sz, m23 = 0,
+            m30 = 0,  m31 = 0,  m32 = 0,  m33 = 1
+        };
+    }
     
     
     /*

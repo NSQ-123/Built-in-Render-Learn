@@ -33,5 +33,5 @@ Shader "Custom/Redify"
         }
         ENDCG
     }
-    CustomEditor "CustomShaderGUI"
+    //CustomEditor "CustomShaderGUI"  //自定义着色器GUI
 }
