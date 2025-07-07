@@ -92,3 +92,21 @@ l 为指向光源的单位矢量
 a 对n和l的点积进行缩放
 b 对n和l的点积进行偏移
 a和b 通常都为0.5  这样点积的范围从[-1,1]映射到[0,1]内
+
+#
+如果一个变换中仅存在平移和旋转变换,那么这个变换的逆矩阵就等于它的转置矩阵
+
+#
+渐变纹理
+fixed halfLambert = dot(worldNormal, worldLightDir) * 0.5 + 0.5;
+fixed3 diffuseColor = tex2D(_RampTex, fixed2(halfLambert, halfLambert)).rgb * _Color.rgb;
+fixed3 diffuse = _LightColor0.rgb * diffuseColor;
+使用halfLambert来构建一个纹理坐标，并使用这个坐标对纹理进行采样
+由于RampTex是一维纹理(它在纵轴方向上颜色不变),因此纹理坐标的u和v方向我们都使用了halfLambert
+把从渐变纹理采样得到的颜色和材质颜色Color相乘,得到最终的漫反射颜色
+
+需要把渐变纹理的WrapMode设为Clamp模式
+由于浮点精度的问题,当我们使用fixed2(halfLambert,halfLambert)对渐变纹理进行采样时,虽
+然理论上halfLambert的值在[0,1]之间,但可能会有1.000 01这样的值出现。如果
+我们使用的是Repeat模式,此时就会舍弃整数部分,只保留小数部分,得到的值
+就是0.000001,对应了渐变图中最左边的值,
